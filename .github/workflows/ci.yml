@@ -1,0 +1,32 @@
+name: Coffee-CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+permissions:
+  contents: read
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v7
+
+      - name: Set up .Net
+        uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: '10.0.x' # Must be >= the TargetFramework in csproj files
+      
+      - name: Restore
+        run: dotnet restore Coffee/Coffee.slnx
+
+      - name: Build
+        run: dotnet build Coffee/Coffee.slnx --configuration Release --no-restore
+      
+      - name: Test
+        run: dotnet test Coffee/Coffee.slnx --configuration Release --no-build --verbosity normal

@@ -1,0 +1,34 @@
+@page "/menu"
+@inject CoffeeService CoffeeService
+
+<PageTitle>Menu</PageTitle>
+
+<h1><i class="bi bi-cup-hot"></i> Menu</h1>
+
+<section class="menu-section">
+    <header class="menu-section-header">
+        <h2>Drinks</h2>
+    </header>
+    @foreach (var drink in drinks)
+    {
+        <div class="menu-section-card">
+            <div class="fw-bolder fs-400">@drink.Name</div>
+            <div class="text-muted mb-2">@drink.Description</div>
+            <div class="row fs-300">
+                <div class="col">From @drink.Price.ToString("C")</div>
+                <div class="col text-end">
+                    <a href="orders/add/@drink.Id" class="btn btn-primary btn-sm"><i class="bi bi-cart-plus"></i> Order</a>
+                </div>
+            </div>
+        </div>
+    }
+</section>
+
+@code {
+    private List<Drink> drinks = new();
+
+    protected override void OnInitialized()
+    {
+        drinks = CoffeeService.GetDrinks();
+    }
+}

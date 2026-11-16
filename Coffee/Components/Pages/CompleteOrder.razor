@@ -1,0 +1,38 @@
+@page "/orders/complete/{Id:int}"
+@rendermode InteractiveServer
+@inject CoffeeService CoffeeService
+@inject NavigationManager Navigation
+
+<PageTitle>Complete Order</PageTitle>
+
+@if (order == null)
+{
+    <p>Order not found. <a href="/orders">Back to orders</a></p>
+}
+else if (order.Completed)
+{
+    <p>Order @order.Id is already completed. <a href="/orders">Back to orders</a></p>
+}
+else
+{
+    <FormBody Model="order" Title="Complete order" SubmitText="Mark ready" CancelUrl="/orders" OnValidSubmit="Complete">
+        <p><strong>@(CoffeeService.GetDrink(order.DrinkId)?.Name)</strong> (@order.Size) for @order.Customer is ready to hand over?</p>
+    </FormBody>
+}
+
+@code {
+    [Parameter] public int Id { get; set; }
+
+    private Order? order;
+
+    protected override void OnInitialized()
+    {
+        order = CoffeeService.GetOrder(Id);
+    }
+
+    private void Complete()
+    {
+        CoffeeService.CompleteOrder(Id);
+        Navigation.NavigateTo("/orders");
+    }
+}

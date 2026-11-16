@@ -1,0 +1,34 @@
+@page "/orders/delete/{Id:int}"
+@rendermode InteractiveServer
+@inject CoffeeService CoffeeService
+@inject NavigationManager Navigation
+
+<PageTitle>Cancel Order</PageTitle>
+
+@if (order == null)
+{
+    <p>Order not found. <a href="/orders">Back to orders</a></p>
+}
+else
+{
+    <FormBody Model="order" Title="Cancel order" SubmitText="Cancel order" SubmitClass="btn-danger" CancelUrl="/orders" OnValidSubmit="Delete">
+        <p>Cancel <strong>@order.Customer</strong>'s @(CoffeeService.GetDrink(order.DrinkId)?.Name) (@order.Size)? This cannot be undone.</p>
+    </FormBody>
+}
+
+@code {
+    [Parameter] public int Id { get; set; }
+
+    private Order? order;
+
+    protected override void OnInitialized()
+    {
+        order = CoffeeService.GetOrder(Id);
+    }
+
+    private void Delete()
+    {
+        CoffeeService.DeleteOrder(Id);
+        Navigation.NavigateTo("/orders");
+    }
+}

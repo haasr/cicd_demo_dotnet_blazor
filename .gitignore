@@ -1,0 +1,50 @@
+## Ignore Visual Studio & editor temporary files, build results, and tools
+# Build results
+[Dd]ebug/
+[Dd]ebugPublic/
+[Rr]elease/
+[Rr]eleases/
+x64/
+x86/
+[Bb]in/
+[Oo]bj/
+
+# Visual Studio cache, tracking, and user-specific settings
+.vs/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+*.userprefs
+
+# VS Code settings (uncomment if you want to completely hide your workspace settings)
+#.vscode/
+
+# JetBrains Rider
+.idea/
+*.sln.iml
+
+# Web development specific overrides (Blazor / CSS isolation / JS builds)
+node_modules/
+bower_components/
+_tmp/
+.sass-cache/
+.eslintcache
+
+# Publish output directories
+publish/
+*.pubxml
+*.azurePubxml
+
+# Testing outputs
+TestResult*
+BuildLog*
+
+# Local environment secrets and configuration
+.env
+.env.local
+appsettings.Development.json
+
+# Operating System specific files
+.DS_Store
+Thumbs.db

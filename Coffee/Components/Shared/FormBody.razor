@@ -1,0 +1,27 @@
+@* Shared layout for every add/edit/delete form. The page supplies the model,
+   the fields (as child content), and what happens on a valid submit. *@
+
+<h1>@Title</h1>
+
+<div class="menu-section-card" style="max-width: 600px;">
+    <EditForm Model="Model" OnValidSubmit="() => OnValidSubmit.InvokeAsync()">
+        <DataAnnotationsValidator />
+
+        @ChildContent
+
+        <div class="mt-3">
+            <a href="@CancelUrl" class="btn btn-secondary">Cancel</a>
+            <button type="submit" class="btn @SubmitClass">@SubmitText</button>
+        </div>
+    </EditForm>
+</div>
+
+@code {
+    [Parameter, EditorRequired] public object Model { get; set; } = default!;
+    [Parameter] public string Title { get; set; } = string.Empty;
+    [Parameter] public string SubmitText { get; set; } = "Save";
+    [Parameter] public string SubmitClass { get; set; } = "btn-primary";
+    [Parameter] public string CancelUrl { get; set; } = "/";
+    [Parameter] public EventCallback OnValidSubmit { get; set; }
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+}

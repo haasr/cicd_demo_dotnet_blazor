@@ -1,0 +1,24 @@
+﻿<div class="top-row ps-3 navbar navbar-dark">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="/"><span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> Coffee</a>
+    </div>
+</div>
+
+<input type="checkbox" title="Navigation menu" class="navbar-toggler" />
+
+<div class="nav-scrollable" onclick="document.querySelector('.navbar-toggler').click()">
+    <nav class="nav flex-column">
+
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="menu">
+                <i class="bi bi-cup-hot-fill" aria-hidden="true" style="margin-top: -25px;"></i> Menu
+            </NavLink>
+        </div>
+
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="orders">
+                <i class="bi bi-receipt" aria-hidden="true" style="margin-top: -25px;"></i> Orders
+            </NavLink>
+        </div>
+    </nav>
+</div>

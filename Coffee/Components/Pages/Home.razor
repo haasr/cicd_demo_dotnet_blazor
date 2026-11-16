@@ -1,0 +1,25 @@
+@page "/"
+@inject CoffeeService CoffeeService
+
+<PageTitle>Coffee Shop</PageTitle>
+
+<h1 class="mb-4">Coffee Shop Dashboard</h1>
+
+<article class="grid-2">
+    <section class="menu-section">
+        <header class="menu-section-header">
+            <a href="menu" class="menu-section-main-link" title="Menu"><i class="bi bi-box-arrow-up-right" aria-hidden="true"></i></a>
+            <h2><i class="bi bi-cup-hot"></i>Menu</h2>
+        </header>
+        <a href="/menu" class="menu-section-list-link"><i class="bi bi-list-ul"></i>Browse drinks</a>
+        <a href="/orders/add" class="menu-section-list-link"><i class="bi bi-plus"></i>Place an order</a>
+    </section>
+    <section class="menu-section">
+        <header class="menu-section-header">
+            <a href="orders" class="menu-section-main-link" title="Order Queue"><i class="bi bi-box-arrow-up-right" aria-hidden="true"></i></a>
+            <h2><i class="bi bi-receipt"></i>Orders</h2>
+        </header>
+        <a href="/orders" class="menu-section-list-link"><i class="bi bi-hourglass-split"></i>Order queue (@CoffeeService.CountPending() pending)</a>
+        <a href="/orders" class="menu-section-list-link"><i class="bi bi-gear"></i>Manage orders</a>
+    </section>
+</article>

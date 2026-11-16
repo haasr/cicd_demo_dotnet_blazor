@@ -1,0 +1,72 @@
+@page "/orders"
+@inject CoffeeService CoffeeService
+
+<PageTitle>Order Queue</PageTitle>
+
+<h1><i class="bi bi-receipt"></i> Order Queue</h1>
+
+<div class="grid-2">
+    <section class="menu-section">
+        <header class="menu-section-header">
+            <h2 class="d-inline">All orders</h2>
+            <a class="btn btn-primary mb-2" href="orders/add" style="float: right;"><i class="bi bi-plus-lg"></i> New order</a>
+        </header>
+        <div data-searchable-list="customer,drink,notes">
+            <input type="search" class="fuzzy-search mb-2" placeholder="Search orders..." style="width: 50%;" />
+            <button class="sort btn btn-secondary mb-2 fs-200" data-sort="customer">Sort By Customer (A-Z)</button>
+            <ul class="list" style="list-style-type: none; padding: 0;">
+            @foreach (var order in orders)
+            {
+                <li class="menu-section-card mb-1">
+                    <div class="row mb-2 fs-300">
+                        <span class="text-muted" style="float: left; margin: -10px 10px 0 0;">ID: @order.Id</span>
+                        <div class="fw-bolder col-7 fs-400 customer">@order.Customer</div>
+                        <a href="orders/edit/@order.Id" class="col-2"><i class="bi bi-pencil-fill"></i> Edit</a>
+                        <a href="orders/delete/@order.Id" class="col-2 text-danger"><i class="bi bi-trash3-fill"></i> Cancel</a>
+                    </div>
+                    <div class="row fs-300">
+                        <div class="col-3">Drink:</div>
+                        <div class="col drink">@(CoffeeService.GetDrink(order.DrinkId)?.Name ?? "(removed from menu)") (@order.Size)</div>
+                    </div>
+                    <div class="row fs-300">
+                        <div class="col-3">Notes:</div>
+                        <div class="col notes">@order.Notes</div>
+                    </div>
+                    <div class="row fs-300">
+                        <div class="col-3">Total:</div>
+                        <div class="col">
+                            @CoffeeService.GetPrice(order).ToString("C")
+                            @if (order.Completed)
+                            {
+                                <span class="ms-3 text-muted"><i class="bi bi-check-circle-fill"></i> Completed</span>
+                            }
+                            else
+                            {
+                                <a href="orders/complete/@order.Id" class="ms-3 btn btn-secondary btn-sm"><i class="bi bi-check-lg"></i> Mark ready</a>
+                            }
+                        </div>
+                    </div>
+                </li>
+            }
+            </ul>
+        </div>
+    </section>
+    <section class="menu-section">
+        <header class="menu-section-header">
+            <h2>Summary</h2>
+        </header>
+        <div class="menu-section-card" style="flex-basis: 100%;">
+            <p>Pending orders: <strong>@CoffeeService.CountPending()</strong></p>
+            <p class="mb-0">Completed orders: <strong>@(orders.Count - CoffeeService.CountPending())</strong></p>
+        </div>
+    </section>
+</div>
+
+@code {
+    private List<Order> orders = new();
+
+    protected override void OnInitialized()
+    {
+        orders = CoffeeService.GetOrders();
+    }
+}

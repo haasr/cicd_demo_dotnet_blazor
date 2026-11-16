@@ -1,0 +1,87 @@
+@page "/orders/add"
+@page "/orders/add/{DrinkId:int}"
+@page "/orders/edit/{Id:int}"
+@rendermode InteractiveServer
+@inject CoffeeService CoffeeService
+@inject NavigationManager Navigation
+
+<PageTitle>@(Id == null ? "New Order" : "Edit Order")</PageTitle>
+
+@if (order == null)
+{
+    <p>Order not found. <a href="/orders">Back to orders</a></p>
+}
+else
+{
+    <FormBody Model="order" Title="@(Id == null ? "New order" : $"Edit order {Id}")" CancelUrl="/orders" OnValidSubmit="Save">
+        <div class="mb-3">
+            <label class="form-label">Customer name</label>
+            <InputText class="form-control" @bind-Value="order.Customer" />
+            <ValidationMessage For="() => order.Customer" />
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Drink</label>
+            <InputSelect class="form-select" @bind-Value="order.DrinkId">
+                @foreach (var drink in CoffeeService.GetDrinks())
+                {
+                    <option value="@drink.Id">@drink.Name (@drink.Price.ToString("C"))</option>
+                }
+            </InputSelect>
+            <ValidationMessage For="() => order.DrinkId" />
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Size</label>
+            <InputSelect class="form-select" @bind-Value="order.Size">
+                @foreach (var size in Order.Sizes)
+                {
+                    <option value="@size">@size</option>
+                }
+            </InputSelect>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Notes</label>
+            <InputText class="form-control" @bind-Value="order.Notes" placeholder="Oat milk, extra hot, ..." />
+        </div>
+        <p>Total: <strong>@CoffeeService.GetPrice(order).ToString("C")</strong></p>
+    </FormBody>
+}
+
+@code {
+    // Id is null on /orders/add, set on /orders/edit/5. DrinkId pre-selects a drink (from the menu).
+    [Parameter] public int? Id { get; set; }
+    [Parameter] public int? DrinkId { get; set; }
+
+    private Order? order;
+
+    protected override void OnInitialized()
+    {
+        if (Id == null)
+        {
+            // Start with a drink selected so the dropdown always has a value.
+            var firstDrink = DrinkId ?? CoffeeService.GetDrinks().FirstOrDefault()?.Id ?? 0;
+            order = new Order { DrinkId = firstDrink };
+            return;
+        }
+
+        // Edit a copy, so leaving the page without saving leaves the real order untouched.
+        var existing = CoffeeService.GetOrder(Id.Value);
+        if (existing != null)
+        {
+            order = new Order { Id = existing.Id, Customer = existing.Customer, DrinkId = existing.DrinkId, Size = existing.Size, Notes = existing.Notes, Completed = existing.Completed };
+        }
+    }
+
+    private void Save()
+    {
+        if (Id == null)
+        {
+            CoffeeService.AddOrder(order!);
+        }
+        else
+        {
+            CoffeeService.EditOrder(order!);
+        }
+
+        Navigation.NavigateTo("/orders");
+    }
+}
